@@ -39,14 +39,21 @@ def generate_video_metadata(absolute_paths, relative_paths):
 
         [num, denom] = map(int, video_stream["r_frame_rate"].split('/'))
         fps = float(num) / float(denom)
-        num_frames = video_stream["nb_frames"]
+        if fps > 999:
+            fps = 30000.0/1001
+        if absolute_path[-3:] == 'mp4':
+            num_frames = video_stream["nb_frames"]
+            path_name = relative_path
+        elif absolute_path[-3:] == 'wmv':
+            num_frames = int(float(video_stream["duration"]) * fps)
+            path_name = relative_path[:-3] + 'mp4'
         width = video_stream["width"]
         height = video_stream["height"]
 
         id = len(vids)
         
         meta = { "id" : id,
-                 "filename" : relative_path,
+                 "filename" : path_name,
                  "num_frames" : num_frames,
                  "fps" : fps,
                  "width" : width,
