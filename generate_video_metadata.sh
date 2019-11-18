@@ -11,6 +11,6 @@ module load anaconda
 source activate /share/pi/cleemess/envs/eeg1
 
 python create_video_metadata.py \
-    /share/pi/cleemess/stanford-eeg-box \
-    /share/pi/cleemess/stanford-eeg-box/2019-05-good-mp4s.txt \
-    /share/pi/cleemess/danfu/2019-05-good-mp4s-metadata.json
+    /share/pi/cleemess/file-conversion-pipeline \
+    /share/pi/cleemess/file-conversion-pipeline/all_mp4s.txt \
+    /share/pi/cleemess/file-conversion-pipeline/all_mp4s_metadata.json

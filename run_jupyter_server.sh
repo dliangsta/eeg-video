@@ -8,7 +8,8 @@
 #SBATCH --mem-per-cpu=32G
 
 module load anaconda
-source activate /share/pi/cleemess/envs/rekall
+# source activate /share/pi/cleemess/envs/rekall
+source activate /home/dwliang/.conda/envs/rekall
 
 cat /etc/hosts
-jupyter notebook --ip=0.0.0.0
+jupyter notebook --ip=0.0.0.0 --no-browser
