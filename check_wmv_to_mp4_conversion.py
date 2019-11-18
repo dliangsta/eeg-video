@@ -1,7 +1,8 @@
+import os
 from time import sleep, time
 from glob import glob
 from os import system
-import os
+from datetime import timedelta
 
 
 if __name__ == "__main__":
@@ -24,7 +25,10 @@ if __name__ == "__main__":
       for i in range(curr_count - prev_count):
         avg_times.append((curr_time - prev_time) / (curr_count - prev_count))
 
-      avg_rate = sum(avg_times) / len(avg_times)
+      while len(avg_times) > 100:
+        avg_times.pop(0)
+
+      avg_time = sum(avg_times) / len(avg_times)
       remaining_count = len(wmv_fns) - len(mp4_fns)
-      remaining_time = avg_rate * remaining_count
-      print(f"prev: {prev_count}, curr: {curr_count}, total: {len(wmv_fns)}, avg rate: {avg_rate:.5f}, remaining: {remaining_count}, remaining_time: {remaining_time / 60 / 60:.5f} hours")
+      remaining_time = timedelta(seconds=avg_rate * remaining_count)
+      print(f"prev: {prev_count:4d}, curr: {curr_count:4d}, total: {len(wmv_fns)}, avg_time: {avg_time:.5f}, remaining: {remaining_count:4d}, remaining_time: {remaining_time}")
