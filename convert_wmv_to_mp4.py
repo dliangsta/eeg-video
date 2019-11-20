@@ -11,13 +11,22 @@ def convert_wmv_to_mp4(arg):
   wmv_fn, mp4_fn = arg
   if not os.path.exists(mp4_fn):
     try:
-      subprocess.call(["ffmpeg", "-i", wmv_fn, mp4_fn], stdout=open(os.devnull, 'wb'), stderr=open(os.devnull, 'wb'))
+      subprocess.call(["ffmpeg", "-i", wmv_fn, "-movflags", "+faststart", mp4_fn], stdout=open(os.devnull, 'wb'), stderr=open(os.devnull, 'wb'))
     except Exception as e:
       print("error!\n\n")
       print(e)
           
 
 if __name__ == "__main__":
+
+
+  # with open("/share/pi/cleemess/file-conversion-pipeline/bad_mp4s.txt", "r") as f:
+  #   fns = [line.strip() for line in f.readlines()]
+  #   for fn in fns:
+  #     if os.path.exists(fn):
+  #       os.remove(fn)
+  #     assert not os.path.exists(fn)
+
   wmv_fns = glob("/share/pi/cleemess/file-conversion-pipeline/*/*/*/*/*.WMV")
   mp4_fns = glob("/share/pi/cleemess/file-conversion-pipeline/*/*/*/*/*.mp4")
 
@@ -27,7 +36,7 @@ if __name__ == "__main__":
     if not os.path.exists(mp4_fn):
       fns.append((wmv_fn, mp4_fn))
 
-  assert len(set(wmv_fns)) - len(set(mp4_fns)) == len(fns)
+  # assert len(set(wmv_fns)) - len(set(mp4_fns)) == len(fns), (len(set(wmv_fns)), len(set(mp4_fns)), len(set(wmv_fns)) - len(set(mp4_fns)), len(fns), list(set(wmv_fns) - set(mp4_fns)), fns)
 
   shuffle(fns)
   p = Pool(16)

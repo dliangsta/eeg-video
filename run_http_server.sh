@@ -10,6 +10,7 @@
 module load anaconda
 source activate /share/pi/cleemess/envs/rekall
 
-cd /share/pi/cleemess/stanford-eeg-box
+# cd /share/pi/cleemess/stanford-eeg-box
+cd /share/pi/cleemess/file-conversion-pipeline
 cat /etc/hosts
 http-server

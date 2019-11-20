@@ -14,6 +14,8 @@ if __name__ == "__main__":
   wmv_fns = glob("/share/pi/cleemess/file-conversion-pipeline/*/*/*/*/*.WMV")
   avg_times = []
 
+  print(f"curr: {curr_count:4d}, total: {len(wmv_fns)}")
+
   while True:
     mp4_fns = glob("/share/pi/cleemess/file-conversion-pipeline/*/*/*/*/*.mp4")
     prev_count = curr_count
@@ -30,5 +32,5 @@ if __name__ == "__main__":
 
       avg_time = sum(avg_times) / len(avg_times)
       remaining_count = len(wmv_fns) - len(mp4_fns)
-      remaining_time = timedelta(seconds=avg_rate * remaining_count)
+      remaining_time = timedelta(seconds=avg_time * remaining_count)
       print(f"prev: {prev_count:4d}, curr: {curr_count:4d}, total: {len(wmv_fns)}, avg_time: {avg_time:.5f}, remaining: {remaining_count:4d}, remaining_time: {remaining_time}")

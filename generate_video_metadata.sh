@@ -10,7 +10,4 @@
 module load anaconda
 source activate /share/pi/cleemess/envs/eeg1
 
-python create_video_metadata.py \
-    /share/pi/cleemess/file-conversion-pipeline \
-    /share/pi/cleemess/file-conversion-pipeline/all_mp4s.txt \
-    /share/pi/cleemess/file-conversion-pipeline/all_mp4s_metadata.json
+python create_video_metadata.py

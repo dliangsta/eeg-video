@@ -1,10 +1,11 @@
 import argparse
-import glob
 import json
 import os
 import shlex
 import subprocess
 import sys
+
+from tqdm import tqdm
 
 def generate_video_metadata(absolute_paths, relative_paths):
     
@@ -26,49 +27,55 @@ def generate_video_metadata(absolute_paths, relative_paths):
 
     vids = []
     
-    for absolute_path, relative_path in zip(absolute_paths, relative_paths):
+    with tqdm(list(zip(absolute_paths, relative_paths))) as pbar:
+        for i, (absolute_path, relative_path) in enumerate(pbar):
 
-        cmd = "ffprobe -v quiet -print_format json -show_streams %s" % absolute_path
-        try:
-            outp = subprocess.check_output(shlex.split(cmd)).decode("utf-8")
-        except:
-            print('Error on %', absolute_path)
-            continue
-        streams = json.loads(outp)["streams"]
-        video_stream = [s for s in streams if s["codec_type"] == "video"][0]
+            cmd = "ffprobe -v quiet -print_format json -show_streams %s" % absolute_path
+            try:
+                outp = subprocess.check_output(shlex.split(cmd)).decode("utf-8")
+            except KeyboardInterrupt:
+                raise
+            except Exception as e:
+                # print(cmd)
+                # print('Error on %', absolute_path)
+                # print(e)
+                continue
+            streams = json.loads(outp)["streams"]
+            video_stream = [s for s in streams if s["codec_type"] == "video"][0]
 
-        [num, denom] = map(int, video_stream["r_frame_rate"].split('/'))
-        fps = float(num) / float(denom)
-        if fps > 999:
-            fps = 30000.0/1001
-        if absolute_path[-3:] == 'mp4':
-            num_frames = video_stream["nb_frames"]
-            path_name = relative_path
-        elif absolute_path[-3:] == 'wmv':
-            num_frames = int(float(video_stream["duration"]) * fps)
-            path_name = relative_path[:-3] + 'mp4'
-        width = video_stream["width"]
-        height = video_stream["height"]
+            [num, denom] = map(int, video_stream["r_frame_rate"].split('/'))
+            fps = float(num) / float(denom)
+            if fps > 999:
+                fps = 30000.0/1001
+            if absolute_path[-3:] == 'mp4':
+                num_frames = video_stream["nb_frames"]
+                path_name = relative_path
+            elif absolute_path[-3:] == 'wmv':
+                num_frames = int(float(video_stream["duration"]) * fps)
+                path_name = relative_path[:-3] + 'mp4'
+            width = video_stream["width"]
+            height = video_stream["height"]
 
-        id = len(vids)
-        
-        meta = { "id" : id,
-                 "filename" : path_name,
-                 "num_frames" : num_frames,
-                 "fps" : fps,
-                 "width" : width,
-                 "height" : height}
+            id = len(vids)
+            
+            meta = { "id" : id,
+                    "filename" : path_name,
+                    "num_frames" : num_frames,
+                    "fps" : fps,
+                    "width" : width,
+                    "height" : height}
 
-        vids.append(meta)
+            vids.append(meta)
+            pbar.set_description(f"{len(vids)}/{i}/{len(pbar)}")
 
     return vids
 
 
 
 parser = argparse.ArgumentParser(description='Generate video metadata.')
-parser.add_argument('basedir', help='Base directory containing videos')
-parser.add_argument('file_list', help='List of video files')
-parser.add_argument('outfile', help='Output json file containing metadata for all videos')
+parser.add_argument('--basedir', help='Base directory containing videos', default="/share/pi/cleemess/file-conversion-pipeline")
+parser.add_argument('--file_list', help='List of video files', default="/share/pi/cleemess/file-conversion-pipeline/all_mp4s.txt")
+parser.add_argument('--outfile', help='Output json file containing metadata for all videos', default="/share/pi/cleemess/file-conversion-pipeline/rekall_metadata.json")
 
 args = parser.parse_args()
 basedir = args.basedir
