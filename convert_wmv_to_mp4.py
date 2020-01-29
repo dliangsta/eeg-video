@@ -11,7 +11,26 @@ def convert_wmv_to_mp4(arg):
   wmv_fn, mp4_fn = arg
   if not os.path.exists(mp4_fn):
     try:
-      subprocess.call(["ffmpeg", "-i", wmv_fn, "-movflags", "+faststart", mp4_fn], stdout=open(os.devnull, 'wb'), stderr=open(os.devnull, 'wb'))
+      subprocess.call([
+        "ffmpeg", 
+        "-r", 
+        "30000/1001", 
+        "-i", 
+        wmv_fn, 
+        "-r", 
+        "30000/1001", 
+        "-movflags", 
+        "+faststart", 
+        "-c:v", 
+        "libx264", 
+        "-crf", 
+        "23", 
+        "-c:a", 
+        "aac", 
+        "-q:a", 
+        "100",
+        mp4_fn
+      ], stdout=open(os.devnull, 'wb'), stderr=open(os.devnull, 'wb'))
     except Exception as e:
       print("error!\n\n")
       print(e)

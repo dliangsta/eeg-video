@@ -12,5 +12,6 @@ source activate /share/pi/cleemess/envs/rekall
 
 # cd /share/pi/cleemess/stanford-eeg-box
 cd /share/pi/cleemess/file-conversion-pipeline
+# cd /share/pi/cleemess/eeg-summaries/goodvideo_lpch/
 cat /etc/hosts
 http-server

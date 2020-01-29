@@ -13,4 +13,5 @@ source activate /home/dwliang/.conda/envs/rekall
 
 cat /etc/hosts
 cd /home/dwliang/nk_database_proj/eeg-video/notebooks
-jupyter notebook --ip=0.0.0.0 --no-browser
+# jupyter notebook --ip=0.0.0.0 --no-browser --NotebookApp.iopub_data_rate_limit=1e10
+jupyter notebook --ip=0.0.0.0 --no-browser #--NotebookApp.iopub_data_rate_limit=1e10
